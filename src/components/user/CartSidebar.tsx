@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Minus, Plus, Trash2, X, TicketPercent } from 'lucide-react';
+import { Minus, Plus, Trash2, X, TicketPercent, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/hooks/use-cart';

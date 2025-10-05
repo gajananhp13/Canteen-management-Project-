@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, UserShield } from 'lucide-react';
+import { ShoppingCart, Shield } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,7 +21,7 @@ export function Header() {
           <nav className="flex items-center space-x-2">
             <Button variant="ghost" asChild>
               <Link href="/admin">
-                <UserShield className="h-4 w-4 mr-2" />
+                <Shield className="h-4 w-4 mr-2" />
                 Admin
               </Link>
             </Button>
