@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "A classic burger with fresh vegetables.",
+      "imageUrl": "https://images.unsplash.com/photo-1601391555692-d6c499730eee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxidXJnZXIlMjBiZWVmfGVufDB8fHx8MTc1OTY1MTc4OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "burger beef"
+    },
+    {
+      "id": "2",
+      "description": "Crispy and golden french fries.",
+      "imageUrl": "https://images.unsplash.com/photo-1606755456206-b25206cde27e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmcmVuY2glMjBmcmllc3xlbnwwfHx8fDE3NTk2MTQ3MzF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "french fries"
+    },
+    {
+      "id": "3",
+      "description": "A cheesy margherita pizza.",
+      "imageUrl": "https://images.unsplash.com/photo-1692737580558-b9dfdac5599c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXp6YSUyMGNoZWVzZXxlbnwwfHx8fDE3NTk1NzkwNTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pizza cheese"
+    },
+    {
+      "id": "4",
+      "description": "A healthy garden salad with fresh greens.",
+      "imageUrl": "https://images.unsplash.com/photo-1620745799892-2132a65f4295?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c2FsYWQlMjBncmVlbnN8ZW58MHx8fHwxNzU5NTk1MTY5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salad greens"
+    },
+    {
+      "id": "5",
+      "description": "A refreshing glass of cola with ice.",
+      "imageUrl": "https://images.unsplash.com/photo-1610873167013-2dd675d30ef4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzb2RhJTIwZHJpbmt8ZW58MHx8fHwxNzU5NTk1MDQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "soda drink"
+    },
+    {
+      "id": "6",
+      "description": "Creamy chocolate milkshake.",
+      "imageUrl": "https://images.unsplash.com/photo-1591864384134-8a21ffb51cb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjaG9jb2xhdGUlMjBtaWxrc2hha2V8ZW58MHx8fHwxNzU5NjAyNTU1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate milkshake"
+    },
+    {
+      "id": "7",
+      "description": "A hearty vegetable sandwich.",
+      "imageUrl": "https://images.unsplash.com/photo-1581339742930-ce01dd18da5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx2ZWdldGFibGUlMjBzYW5kd2ljaHxlbnwwfHx8fDE3NTk2MDY3OTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "vegetable sandwich"
+    },
+    {
+      "id": "8",
+      "description": "A warm bowl of tomato soup.",
+      "imageUrl": "https://images.unsplash.com/photo-1693762894461-8305cd26ba9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0b21hdG8lMjBzb3VwfGVufDB8fHx8MTc1OTU5MzEwNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tomato soup"
+    }
+  ]
 }
