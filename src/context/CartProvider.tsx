@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useMemo, useEffect } from 'react';
 import type { CartItem, MenuItem, Discount } from '@/lib/types';
-import { discounts as initialDiscounts } from '@/lib/data';
+import { useDiscounts } from '@/hooks/useDiscounts';
 
 export interface CartContextType {
   items: CartItem[];
@@ -20,22 +20,10 @@ export interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-// In a real app, you'd fetch this from a server, but for now we manage it in context.
-// This allows the discount list to be updated by the admin panel in the demo.
-const useManageableDiscounts = () => {
-    const [discounts, setDiscounts] = useState(initialDiscounts);
-
-    // We can expose functions to update discounts if needed, e.g., for real-time updates
-    // For now, it just holds the state.
-
-    return { discounts };
-}
-
-
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [appliedDiscount, setAppliedDiscount] = useState<Discount | null>(null);
-  const { discounts } = useManageableDiscounts();
+  const { discounts } = useDiscounts();
 
   const addItem = (item: MenuItem, quantity: number = 1) => {
     setItems((prevItems) => {
@@ -95,8 +83,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // If an applied discount is made inactive from the admin panel, remove it from the cart
   useEffect(() => {
-    if (appliedDiscount && !appliedDiscount.isActive) {
-      removeDiscount();
+    if (appliedDiscount) {
+      const currentDiscountState = discounts.find(d => d.id === appliedDiscount.id);
+      if (!currentDiscountState || !currentDiscountState.isActive) {
+        removeDiscount();
+      }
     }
   }, [appliedDiscount, discounts]);
 

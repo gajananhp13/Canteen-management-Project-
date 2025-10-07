@@ -2,9 +2,8 @@
 
 import { generateUniqueOrderId } from "@/ai/flows/generate-unique-order-id";
 import type { CartItem, Discount } from "./types";
+import { saveOrder } from "./firestore";
 
-// In a real app, this would save to a database.
-// For the prototype, we just log it and generate an ID.
 export async function placeOrder(
     cartItems: CartItem[], 
     total: number, 
@@ -13,18 +12,38 @@ export async function placeOrder(
   console.log("Placing order with:", { cartItems, total, discount });
 
   try {
-    const result = await generateUniqueOrderId({
+    const { orderId: generatedId } = await generateUniqueOrderId({
       timestamp: Date.now(),
       userId: "user-servesmart-01", // Mock user ID
     });
+
+    const orderToSave = {
+      id: generatedId,
+      items: cartItems,
+      total: total,
+      discountApplied: discount,
+      date: Date.now(),
+      status: 'Pending' as const
+    }
     
-    console.log("Generated Order ID:", result.orderId);
-    return { orderId: result.orderId };
+    await saveOrder(orderToSave, generatedId);
+    
+    console.log("Saved Order with ID:", generatedId);
+    return { orderId: generatedId };
 
   } catch (error) {
-    console.error("Failed to generate unique order ID:", error);
+    console.error("Failed to generate unique order ID or save order:", error);
     // Fallback to a simpler ID generation if AI flow fails
     const fallbackId = `ORD-FALLBACK-${Date.now()}`;
+    const orderToSave = {
+      id: fallbackId,
+      items: cartItems,
+      total: total,
+      discountApplied: discount,
+      date: Date.now(),
+      status: 'Pending' as const
+    }
+    await saveOrder(orderToSave, fallbackId);
     return { orderId: fallbackId };
   }
 }

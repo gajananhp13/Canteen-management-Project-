@@ -14,6 +14,7 @@ export interface CartItem extends MenuItem {
 }
 
 export interface Discount {
+  id: string; // Use 'id' to match firestore document id
   code: string;
   percentage: number;
   isActive: boolean;
@@ -24,6 +25,6 @@ export interface Order {
   items: CartItem[];
   total: number;
   discountApplied: Discount | null;
-  date: Date;
+  date: number; // Using timestamp for Firestore
   status: 'Pending' | 'Completed' | 'Cancelled';
 }

@@ -1,0 +1,71 @@
+
+{
+  "entities": {
+    "MenuItem": {
+      "title": "Menu Item",
+      "description": "An item available for purchase in the canteen.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the menu item." },
+        "category": { "type": "string", "enum": ["Main Course", "Sides", "Beverages", "Desserts"] },
+        "price": { "type": "number", "description": "Price of the item in INR." },
+        "description": { "type": "string", "description": "A short description of the item." },
+        "imageUrl": { "type": "string", "format": "uri", "description": "URL of the item's image." }
+      },
+      "required": ["name", "category", "price", "imageUrl"]
+    },
+    "Discount": {
+      "title": "Discount Code",
+      "description": "A discount code that can be applied to an order.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "The unique discount code string." },
+        "percentage": { "type": "number", "description": "The percentage discount." },
+        "isActive": { "type": "boolean", "description": "Whether the discount is currently active." }
+      },
+      "required": ["code", "percentage", "isActive"]
+    },
+    "Order": {
+      "title": "Customer Order",
+      "description": "An order placed by a customer.",
+      "type": "object",
+      "properties": {
+        "items": { 
+          "type": "array", 
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "price": { "type": "number" },
+              "quantity": { "type": "number" }
+            },
+            "required": ["id", "name", "price", "quantity"]
+          }
+        },
+        "total": { "type": "number", "description": "The final total amount of the order." },
+        "discountApplied": { "$ref": "#/entities/Discount", "description": "The discount code applied, if any." },
+        "date": { "type": "number", "description": "Timestamp of when the order was placed." },
+        "status": { "type": "string", "enum": ["Pending", "Completed", "Cancelled"] }
+      },
+      "required": ["items", "total", "date", "status"]
+    }
+  },
+  "auth": {
+    "providers": []
+  },
+  "firestore": {
+    "/menuItems/{itemId}": {
+      "schema": { "$ref": "#/entities/MenuItem" },
+      "description": "Stores all available menu items."
+    },
+    "/discounts/{discountId}": {
+      "schema": { "$ref": "#/entities/Discount" },
+      "description": "Stores all discount codes."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Stores all customer orders."
+    }
+  }
+}

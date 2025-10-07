@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -25,6 +25,10 @@ import {
 } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import type { Discount } from '@/lib/types';
+import { useDiscounts } from '@/hooks/useDiscounts';
+import { saveDiscount } from '@/lib/firestore';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   code: z.string().min(4, 'Code must be at least 4 characters.').max(20, 'Code cannot be more than 20 characters.').transform(v => v.toUpperCase()),
@@ -37,11 +41,15 @@ type DiscountFormValues = z.infer<typeof formSchema>;
 interface DiscountsFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSubmit: (data: Discount) => void;
+  onSubmit: () => void;
   discount: Discount | null;
 }
 
 export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: DiscountsFormProps) {
+  const { discounts } = useDiscounts();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<DiscountFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: discount || {
@@ -55,8 +63,33 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
     form.reset(discount || { code: '', percentage: 10, isActive: true });
   }, [discount, form, isOpen]);
 
-  const handleSubmit = (data: DiscountFormValues) => {
-    onSubmit(data);
+  const handleSubmit = async (data: DiscountFormValues) => {
+    setIsLoading(true);
+    // Check if code already exists for new discounts
+    if (!discount && discounts.some(d => d.code === data.code)) {
+      form.setError('code', { message: 'This discount code already exists.' });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const discountData: Omit<Discount, 'id'> = data;
+      await saveDiscount(discountData, discount?.id);
+      toast({
+        title: `Discount ${discount ? 'updated' : 'created'}`,
+        description: `Code "${data.code}" has been successfully saved.`,
+      });
+      onSubmit();
+    } catch (error) {
+      console.error("Failed to save discount:", error);
+      toast({
+        title: "Save Failed",
+        description: "Could not save the discount code. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,8 +147,11 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
               )}
             />
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-              <Button type="submit">{discount ? 'Save Changes' : 'Create Discount'}</Button>
+              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {discount ? 'Save Changes' : 'Create Discount'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -20,13 +20,11 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useDiscounts } from '@/hooks/useDiscounts';
+import { deleteDiscount, updateDiscountStatus } from '@/lib/firestore';
 
-interface DiscountsClientProps {
-  initialDiscounts: Discount[];
-}
-
-export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
-  const [discounts, setDiscounts] = useState<Discount[]>(initialDiscounts);
+export function DiscountsClient() {
+  const { discounts, loading } = useDiscounts();
   const [isFormOpen, setFormOpen] = useState(false);
   const [editingDiscount, setEditingDiscount] = useState<Discount | null>(null);
 
@@ -40,28 +38,15 @@ export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
     setFormOpen(true);
   };
 
-  const handleDeleteDiscount = (code: string) => {
-    // In a real app, you'd make an API call here.
-    setDiscounts(discounts.filter(d => d.code !== code));
+  const handleDeleteDiscount = async (id: string) => {
+    await deleteDiscount(id);
   };
 
-  const toggleDiscountStatus = (code: string) => {
-    // In a real app, you'd make an API call here.
-    setDiscounts(discounts.map(d => d.code === code ? { ...d, isActive: !d.isActive } : d));
+  const toggleDiscountStatus = async (id: string, currentStatus: boolean) => {
+    await updateDiscountStatus(id, !currentStatus);
   };
   
-  const handleFormSubmit = (discount: Discount) => {
-    // In a real app, you'd make an API call here.
-    if (editingDiscount) {
-      setDiscounts(discounts.map((d) => (d.code === discount.code ? discount : d)));
-    } else {
-      // Check if code already exists
-      if (discounts.some(d => d.code === discount.code)) {
-        alert('Discount code already exists.');
-        return;
-      }
-      setDiscounts([...discounts, discount]);
-    }
+  const handleFormSubmit = () => {
     setFormOpen(false);
     setEditingDiscount(null);
   };
@@ -90,15 +75,20 @@ export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {discounts.map((discount) => (
-                <TableRow key={discount.code}>
+              {loading && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center">Loading discounts...</TableCell>
+                </TableRow>
+              )}
+              {!loading && discounts.map((discount) => (
+                <TableRow key={discount.id}>
                   <TableCell className="font-medium font-mono">{discount.code}</TableCell>
                   <TableCell>{discount.percentage}%</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                         <Switch
                             checked={discount.isActive}
-                            onCheckedChange={() => toggleDiscountStatus(discount.code)}
+                            onCheckedChange={() => toggleDiscountStatus(discount.id, discount.isActive)}
                             aria-label="Toggle discount status"
                         />
                         <Badge variant={discount.isActive ? "default" : "outline"} className={discount.isActive ? 'bg-green-600' : ''}>
@@ -125,7 +115,7 @@ export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDeleteDiscount(discount.code)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                          <AlertDialogAction onClick={() => handleDeleteDiscount(discount.id)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

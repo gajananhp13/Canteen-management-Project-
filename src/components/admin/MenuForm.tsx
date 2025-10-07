@@ -32,7 +32,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { MenuItem } from '@/lib/types';
-import { Upload } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
+import { saveMenuItem, uploadImage } from '@/lib/firestore';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
@@ -47,11 +49,15 @@ type MenuFormValues = z.infer<typeof formSchema>;
 interface MenuFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onSubmit: (data: MenuItem) => void;
+  onSubmit: () => void;
   item: MenuItem | null;
 }
 
 export function MenuForm({ isOpen, onOpenChange, onSubmit, item }: MenuFormProps) {
+  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
   const form = useForm<MenuFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: item || {
@@ -63,39 +69,60 @@ export function MenuForm({ isOpen, onOpenChange, onSubmit, item }: MenuFormProps
     },
   });
   
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const imagePreview = form.watch('imageUrl');
 
   useEffect(() => {
-    if (item) {
-      form.reset(item);
-      setImagePreview(item.imageUrl);
-    } else {
-      form.reset({
-        name: '',
-        category: 'Main Course',
-        price: 0,
-        description: '',
-        imageUrl: '',
-      });
-      setImagePreview(null);
+    if (isOpen) {
+        form.reset(item || {
+            name: '',
+            category: 'Main Course',
+            price: 0,
+            description: '',
+            imageUrl: '',
+        });
     }
   }, [item, form, isOpen]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataUrl = reader.result as string;
-        setImagePreview(dataUrl);
-        form.setValue('imageUrl', dataUrl);
-      };
-      reader.readAsDataURL(file);
+      setIsUploading(true);
+      try {
+        const url = await uploadImage(file);
+        form.setValue('imageUrl', url, { shouldValidate: true });
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        toast({
+          title: "Upload Failed",
+          description: "Could not upload the image. Please try again.",
+          variant: "destructive"
+        })
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
-  const handleSubmit = (data: MenuFormValues) => {
-    onSubmit({ ...data, id: item?.id || '' });
+  const handleSubmit = async (data: MenuFormValues) => {
+    setIsLoading(true);
+    try {
+      const menuItem: Omit<MenuItem, 'id'> = data;
+      await saveMenuItem(menuItem, item?.id);
+      toast({
+        title: `Item ${item ? 'updated' : 'created'}`,
+        description: `${data.name} has been successfully saved.`,
+      });
+      onSubmit();
+    } catch(error) {
+      console.error("Failed to save menu item:", error);
+      toast({
+        title: "Save Failed",
+        description: "Could not save the menu item. Please try again.",
+        variant: "destructive"
+      })
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -109,12 +136,14 @@ export function MenuForm({ isOpen, onOpenChange, onSubmit, item }: MenuFormProps
             <FormField
               control={form.control}
               name="imageUrl"
-              render={({ field }) => (
+              render={() => (
                 <FormItem>
                   <FormLabel>Image</FormLabel>
                   <FormControl>
                     <div className="w-full h-40 border-2 border-dashed rounded-md flex items-center justify-center relative">
-                      {imagePreview ? (
+                      {isUploading ? (
+                        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                      ) : imagePreview ? (
                         <Image src={imagePreview} alt="Preview" fill className="object-cover rounded-md" />
                       ) : (
                         <div className="text-center text-muted-foreground">
@@ -127,6 +156,7 @@ export function MenuForm({ isOpen, onOpenChange, onSubmit, item }: MenuFormProps
                         accept="image/*"
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         onChange={handleImageChange}
+                        disabled={isUploading}
                       />
                     </div>
                   </FormControl>
@@ -200,8 +230,11 @@ export function MenuForm({ isOpen, onOpenChange, onSubmit, item }: MenuFormProps
               )}
             />
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-              <Button type="submit">Save</Button>
+              <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} disabled={isLoading}>Cancel</Button>
+              <Button type="submit" disabled={isUploading || isLoading}>
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {isLoading ? "Saving..." : "Save"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

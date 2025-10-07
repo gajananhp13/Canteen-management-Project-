@@ -7,14 +7,15 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, Smartphone, ScanLine, ShoppingBasket, Quote } from 'lucide-react';
-import { menuItems } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Logo } from '@/components/shared/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { motion, useInView } from 'framer-motion';
+import { useMenuItems } from '@/hooks/useMenuItems';
 
 export default function Home() {
+  const { items: menuItems, loading } = useMenuItems();
   const featuredItems = menuItems.slice(0, 4);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -156,7 +157,9 @@ export default function Home() {
               </p>
             </div>
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredItems.map((item, index) => (
+              {loading ? (
+                 <p className="col-span-full text-center">Loading featured items...</p>
+              ) : featuredItems.map((item, index) => (
                 <AnimatedCard key={item.id} index={index}>
                   <Card className="group flex flex-col overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                     <CardHeader className="p-0">

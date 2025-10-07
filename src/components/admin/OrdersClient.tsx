@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -21,13 +20,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '../ui/button';
 import { MoreHorizontal } from 'lucide-react';
+import { useOrders } from '@/hooks/useOrders';
+import { updateOrderStatus } from '@/lib/firestore';
 
-interface OrdersClientProps {
-  initialOrders: Order[];
-}
-
-export function OrdersClient({ initialOrders }: OrdersClientProps) {
-  const [orders, setOrders] = useState<Order[]>(initialOrders);
+export function OrdersClient() {
+  const { orders, loading } = useOrders();
 
   const getStatusVariant = (status: Order['status']) => {
     switch (status) {
@@ -51,8 +48,8 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
     }
   }
 
-  const updateOrderStatus = (orderId: string, status: Order['status']) => {
-    setOrders(orders.map(o => o.id === orderId ? {...o, status} : o))
+  const handleUpdateStatus = async (orderId: string, status: Order['status']) => {
+    await updateOrderStatus(orderId, status);
   }
 
   return (
@@ -78,10 +75,15 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.sort((a,b) => b.date.getTime() - a.date.getTime()).map((order) => (
+              {loading && (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center">Loading orders...</TableCell>
+                </TableRow>
+              )}
+              {!loading && orders.sort((a, b) => b.date - a.date).map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium font-mono text-sm">{order.id}</TableCell>
-                  <TableCell>{format(order.date, 'PPp')}</TableCell>
+                  <TableCell>{format(new Date(order.date), 'PPp')}</TableCell>
                   <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
                   <TableCell>₹{order.total.toFixed(2)}</TableCell>
                   <TableCell>
@@ -96,9 +98,9 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => updateOrderStatus(order.id, 'Completed')}>Mark as Completed</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => updateOrderStatus(order.id, 'Pending')}>Mark as Pending</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => updateOrderStatus(order.id, 'Cancelled')} className="text-destructive">Mark as Cancelled</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateStatus(order.id, 'Completed')}>Mark as Completed</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateStatus(order.id, 'Pending')}>Mark as Pending</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUpdateStatus(order.id, 'Cancelled')} className="text-destructive">Mark as Cancelled</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

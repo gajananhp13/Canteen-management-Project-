@@ -20,13 +20,11 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Image from 'next/image';
+import { useMenuItems } from '@/hooks/useMenuItems';
+import { deleteMenuItem } from '@/lib/firestore';
 
-interface MenuClientProps {
-  initialItems: MenuItem[];
-}
-
-export function MenuClient({ initialItems }: MenuClientProps) {
-  const [items, setItems] = useState<MenuItem[]>(initialItems);
+export function MenuClient() {
+  const { items, loading } = useMenuItems();
   const [isFormOpen, setFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
 
@@ -40,19 +38,11 @@ export function MenuClient({ initialItems }: MenuClientProps) {
     setFormOpen(true);
   };
   
-  const handleDeleteItem = (id: string) => {
-    // In a real app, this would be an API call.
-    setItems(items.filter(item => item.id !== id));
+  const handleDeleteItem = async (id: string) => {
+    await deleteMenuItem(id);
   }
 
-  const handleFormSubmit = (item: MenuItem) => {
-    if (editingItem) {
-      // Update
-      setItems(items.map((i) => (i.id === item.id ? item : i)));
-    } else {
-      // Add
-      setItems([...items, { ...item, id: (Math.random() * 1000).toString() }]);
-    }
+  const handleFormSubmit = () => {
     setFormOpen(false);
     setEditingItem(null);
   };
@@ -82,7 +72,12 @@ export function MenuClient({ initialItems }: MenuClientProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {items.map((item) => (
+              {loading && (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">Loading menu items...</TableCell>
+                </TableRow>
+              )}
+              {!loading && items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
                     <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="rounded-md object-cover w-16 h-16" />

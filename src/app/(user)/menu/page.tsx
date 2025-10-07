@@ -1,12 +1,13 @@
 
 'use client';
 
-import { menuItems } from '@/lib/data';
 import type { Category } from '@/lib/types';
 import { MenuItemCard } from '@/components/user/MenuItemCard';
 import { motion } from 'framer-motion';
+import { useMenuItems } from '@/hooks/useMenuItems';
 
 export default function MenuPage() {
+  const { items: menuItems, loading } = useMenuItems();
   const categories: Category[] = ['Main Course', 'Sides', 'Beverages', 'Desserts'];
 
   return (
@@ -26,30 +27,36 @@ export default function MenuPage() {
         </motion.div>
       </div>
 
-      <div className="space-y-16">
-        {categories.map((category) => {
-          const items = menuItems.filter((item) => item.category === category);
-          if (items.length === 0) return null;
+      {loading ? (
+        <div className="text-center">
+            <p>Loading menu...</p>
+        </div>
+      ) : (
+        <div className="space-y-16">
+          {categories.map((category) => {
+            const items = menuItems.filter((item) => item.category === category);
+            if (items.length === 0) return null;
 
-          return (
-            <section key={category}>
-              <h2 className="text-4xl font-bold font-headline mb-8 tracking-tight">{category}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {items.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
-                  >
-                    <MenuItemCard item={item} />
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+            return (
+              <section key={category}>
+                <h2 className="text-4xl font-bold font-headline mb-8 tracking-tight">{category}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  {items.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.05 }}
+                    >
+                      <MenuItemCard item={item} />
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
