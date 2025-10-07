@@ -51,7 +51,7 @@ export function CartSidebar() {
   const handlePaymentSuccess = (orderId: string) => {
     setPaymentDialogOpen(false);
     // The cart is cleared in the payment dialog upon success
-    router.push(`/order/${orderId}/success`);
+    router.push(`/order/${encodeURIComponent(orderId)}/success`);
   }
 
   return (
@@ -98,8 +98,8 @@ export function CartSidebar() {
                 })}
               </div>
             </ScrollArea>
-            <SheetFooter className="mt-auto flex flex-col gap-4 border-t bg-background px-6 py-4">
-                <div className="space-y-2">
+            <div className="px-6 py-4 border-t space-y-4">
+                 <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Subtotal</span>
                         <span>₹{subtotal.toFixed(2)}</span>
@@ -116,7 +116,8 @@ export function CartSidebar() {
                         <span>₹{total.toFixed(2)}</span>
                     </div>
                 </div>
-                
+            </div>
+            <SheetFooter className="mt-auto flex flex-col gap-4 border-t bg-background px-6 py-4">
                 {!appliedDiscount ? (
                     <div className="flex items-center gap-2">
                         <Input 
