@@ -7,6 +7,7 @@ import { menuItems } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Logo } from '@/components/shared/Logo';
+import { ThemeToggle } from '@/components/shared/ThemeToggle';
 
 
 export default function Home() {
@@ -24,6 +25,7 @@ export default function Home() {
             <Button asChild>
               <Link href="/admin">Admin Panel</Link>
             </Button>
+            <ThemeToggle />
           </nav>
         </div>
       </header>
