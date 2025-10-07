@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -26,8 +27,8 @@ import { Switch } from '@/components/ui/switch';
 import type { Discount } from '@/lib/types';
 
 const formSchema = z.object({
-  code: z.string().min(4, 'Code must be at least 4 characters.').transform(v => v.toUpperCase()),
-  percentage: z.coerce.number().min(1, 'Percentage must be between 1 and 100.').max(100),
+  code: z.string().min(4, 'Code must be at least 4 characters.').max(20, 'Code cannot be more than 20 characters.').transform(v => v.toUpperCase()),
+  percentage: z.coerce.number().min(1, 'Percentage must be between 1 and 100.').max(100, 'Percentage must be between 1 and 100.'),
   isActive: z.boolean(),
 });
 
@@ -52,7 +53,7 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
 
   useEffect(() => {
     form.reset(discount || { code: '', percentage: 10, isActive: true });
-  }, [discount, form]);
+  }, [discount, form, isOpen]);
 
   const handleSubmit = (data: DiscountFormValues) => {
     onSubmit(data);
@@ -63,6 +64,9 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{discount ? 'Edit' : 'Create'} Discount</DialogTitle>
+          <DialogDescription>
+            {discount ? 'Edit the details of your existing discount code.' : 'Create a new discount code for your customers.'}
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -73,7 +77,7 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
                 <FormItem>
                   <FormLabel>Discount Code</FormLabel>
                   <FormControl>
-                    <Input placeholder="SAVE10" {...field} disabled={!!discount} />
+                    <Input placeholder="E.g., SAVE10" {...field} disabled={!!discount} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -99,6 +103,9 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                   <div className="space-y-0.5">
                     <FormLabel>Active Status</FormLabel>
+                    <p className="text-sm text-muted-foreground">
+                        Inactive codes cannot be used by customers.
+                    </p>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -108,7 +115,7 @@ export function DiscountsForm({ isOpen, onOpenChange, onSubmit, discount }: Disc
             />
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-              <Button type="submit">Save</Button>
+              <Button type="submit">{discount ? 'Save Changes' : 'Create Discount'}</Button>
             </DialogFooter>
           </form>
         </Form>

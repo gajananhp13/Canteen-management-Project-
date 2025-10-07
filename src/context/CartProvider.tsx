@@ -1,8 +1,8 @@
 'use client';
 
-import React, { createContext, useState, useMemo } from 'react';
+import React, { createContext, useState, useMemo, useEffect } from 'react';
 import type { CartItem, MenuItem, Discount } from '@/lib/types';
-import { discounts } from '@/lib/data';
+import { discounts as initialDiscounts } from '@/lib/data';
 
 export interface CartContextType {
   items: CartItem[];
@@ -20,9 +20,22 @@ export interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// In a real app, you'd fetch this from a server, but for now we manage it in context.
+// This allows the discount list to be updated by the admin panel in the demo.
+const useManageableDiscounts = () => {
+    const [discounts, setDiscounts] = useState(initialDiscounts);
+
+    // We can expose functions to update discounts if needed, e.g., for real-time updates
+    // For now, it just holds the state.
+
+    return { discounts };
+}
+
+
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [appliedDiscount, setAppliedDiscount] = useState<Discount | null>(null);
+  const { discounts } = useManageableDiscounts();
 
   const addItem = (item: MenuItem, quantity: number = 1) => {
     setItems((prevItems) => {
@@ -61,7 +74,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: 'Invalid discount code.' };
     }
     if (!discount.isActive) {
-      return { success: false, message: 'This discount code has expired.' };
+      return { success: false, message: 'This discount code is not active.' };
     }
     setAppliedDiscount(discount);
     return { success: true, message: `Discount "${discount.code}" applied!` };
@@ -74,11 +87,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items]);
   
   const total = useMemo(() => {
-    if (appliedDiscount) {
+    if (appliedDiscount && appliedDiscount.isActive) {
       return subtotal * (1 - appliedDiscount.percentage / 100);
     }
     return subtotal;
   }, [subtotal, appliedDiscount]);
+
+  // If an applied discount is made inactive from the admin panel, remove it from the cart
+  useEffect(() => {
+    if (appliedDiscount && !appliedDiscount.isActive) {
+      removeDiscount();
+    }
+  }, [appliedDiscount, discounts]);
+
 
   const totalItems = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items]);
 

@@ -41,17 +41,25 @@ export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
   };
 
   const handleDeleteDiscount = (code: string) => {
+    // In a real app, you'd make an API call here.
     setDiscounts(discounts.filter(d => d.code !== code));
   };
 
   const toggleDiscountStatus = (code: string) => {
+    // In a real app, you'd make an API call here.
     setDiscounts(discounts.map(d => d.code === code ? { ...d, isActive: !d.isActive } : d));
   };
   
   const handleFormSubmit = (discount: Discount) => {
+    // In a real app, you'd make an API call here.
     if (editingDiscount) {
       setDiscounts(discounts.map((d) => (d.code === discount.code ? discount : d)));
     } else {
+      // Check if code already exists
+      if (discounts.some(d => d.code === discount.code)) {
+        alert('Discount code already exists.');
+        return;
+      }
       setDiscounts([...discounts, discount]);
     }
     setFormOpen(false);
@@ -112,7 +120,7 @@ export function DiscountsClient({ initialDiscounts }: DiscountsClientProps) {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This will permanently delete the discount code "{discount.code}".
+                            This will permanently delete the discount code "{discount.code}". This action cannot be undone.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
