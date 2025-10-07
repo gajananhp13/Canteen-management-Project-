@@ -98,49 +98,48 @@ export function CartSidebar() {
                 })}
               </div>
             </ScrollArea>
-            <Separator />
-            <SheetFooter className="px-6 py-4 flex flex-col gap-4 bg-secondary/50">
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal.toFixed(2)}</span>
-                </div>
-                {appliedDiscount && (
-                  <div className="flex justify-between text-primary">
-                    <span>Discount ({appliedDiscount.percentage}%)</span>
-                    <span>- ₹{(subtotal - total).toFixed(2)}</span>
-                  </div>
-                )}
-                <Separator />
-                <div className="flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span>₹{total.toFixed(2)}</span>
-                </div>
-              </div>
-
-              {!appliedDiscount ? (
-                <div className="flex items-center space-x-2">
-                  <Input 
-                    type="text" 
-                    placeholder="Discount code" 
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    className="bg-background"
-                  />
-                  <Button onClick={handleApplyDiscount} disabled={!discountCode}>Apply</Button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between p-2 rounded-md bg-primary/10 text-primary">
-                    <div className="flex items-center gap-2">
-                        <TicketPercent className="h-4 w-4"/>
-                        <span className="font-medium text-sm">Code "{appliedDiscount.code}" applied</span>
+            <SheetFooter className="mt-auto flex flex-col gap-4 border-t bg-background px-6 py-4">
+                <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal</span>
+                        <span>₹{subtotal.toFixed(2)}</span>
                     </div>
-                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={removeDiscount}>
-                    <X className="h-4 w-4" />
-                  </Button>
+                    {appliedDiscount && (
+                    <div className="flex justify-between text-sm text-green-600">
+                        <span>Discount ({appliedDiscount.percentage}%)</span>
+                        <span>- ₹{(subtotal - total).toFixed(2)}</span>
+                    </div>
+                    )}
+                    <Separator className="my-2" />
+                    <div className="flex justify-between font-bold text-lg">
+                        <span>Total</span>
+                        <span>₹{total.toFixed(2)}</span>
+                    </div>
                 </div>
-              )}
-
+                
+                {!appliedDiscount ? (
+                    <div className="flex items-center gap-2">
+                        <Input 
+                            type="text" 
+                            placeholder="Discount code" 
+                            value={discountCode}
+                            onChange={(e) => setDiscountCode(e.target.value)}
+                            className="bg-muted border-none"
+                        />
+                        <Button onClick={handleApplyDiscount} disabled={!discountCode} variant="outline" className="shrink-0">Apply</Button>
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-between rounded-md bg-green-100/50 text-green-700 p-2 text-sm">
+                        <div className="flex items-center gap-2 font-medium">
+                            <TicketPercent className="h-4 w-4"/>
+                            <span>Code "{appliedDiscount.code}" applied</span>
+                        </div>
+                      <Button variant="ghost" size="icon" className="h-6 w-6 text-green-700" onClick={removeDiscount}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                )}
+              
               <Button size="lg" className="w-full" onClick={handleCheckout}>
                 Proceed to Checkout
               </Button>
