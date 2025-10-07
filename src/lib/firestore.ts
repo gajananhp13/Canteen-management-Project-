@@ -1,5 +1,6 @@
 
-import { collection, doc, setDoc, getFirestore, deleteDoc, updateDoc, getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/firestore';
+import { collection, doc, setDoc, getFirestore, deleteDoc, updateDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import type { MenuItem, Discount, Order } from './types';
 
