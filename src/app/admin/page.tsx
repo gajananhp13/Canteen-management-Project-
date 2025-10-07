@@ -1,8 +1,8 @@
-import { DollarSign, ClipboardList, Utensils, TicketPercent } from 'lucide-react';
+import { ClipboardList, TicketPercent, Utensils } from 'lucide-react';
 import { StatCard } from '@/components/admin/StatCard';
 import { RevenueChart } from '@/components/admin/RevenueChart';
 import { OrdersClient } from '@/components/admin/OrdersClient';
-import { orders, menuItems, discounts } from '@/lib/data';
+import { discounts, menuItems, orders } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AdminDashboardPage() {
@@ -16,9 +16,9 @@ export default function AdminDashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard 
           title="Total Revenue" 
-          value={`$${totalRevenue.toFixed(2)}`}
+          value={`₹${totalRevenue.toFixed(2)}`}
           description="+20.1% from last month"
-          icon={DollarSign}
+          icon={() => <span className="font-bold text-muted-foreground">₹</span>}
         />
         <StatCard 
           title="Total Orders" 
@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
                     <p className="text-sm font-medium leading-none">{order.id}</p>
                     <p className="text-sm text-muted-foreground">{order.items.map(i => i.name).join(', ')}</p>
                   </div>
-                  <div className="ml-auto font-medium">+${order.total.toFixed(2)}</div>
+                  <div className="ml-auto font-medium">+₹{order.total.toFixed(2)}</div>
                 </div>
               ))}
             </div>

@@ -83,7 +83,7 @@ export function OrdersClient({ initialOrders }: OrdersClientProps) {
                   <TableCell className="font-medium font-mono text-sm">{order.id}</TableCell>
                   <TableCell>{format(order.date, 'PPp')}</TableCell>
                   <TableCell>{order.items.reduce((acc, item) => acc + item.quantity, 0)}</TableCell>
-                  <TableCell>${order.total.toFixed(2)}</TableCell>
+                  <TableCell>₹{order.total.toFixed(2)}</TableCell>
                   <TableCell>
                     <Badge variant={getStatusVariant(order.status)} className={getStatusClass(order.status)}>{order.status}</Badge>
                   </TableCell>

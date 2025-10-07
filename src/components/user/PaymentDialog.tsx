@@ -76,7 +76,7 @@ export function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: PaymentDial
             </div>
             <div className="text-center">
                 <p className="text-muted-foreground">Total Amount</p>
-                <p className="text-4xl font-bold font-headline">${total.toFixed(2)}</p>
+                <p className="text-4xl font-bold font-headline">₹{total.toFixed(2)}</p>
             </div>
         </div>
         <DialogFooter>

@@ -84,7 +84,7 @@ export function MenuClient({ initialItems }: MenuClientProps) {
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell><Badge variant="secondary">{item.category}</Badge></TableCell>
-                  <TableCell>${item.price.toFixed(2)}</TableCell>
+                  <TableCell>₹{item.price.toFixed(2)}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="icon" onClick={() => handleEditItem(item)}>
                       <Edit className="h-4 w-4" />

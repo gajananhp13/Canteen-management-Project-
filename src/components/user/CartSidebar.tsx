@@ -76,7 +76,7 @@ export function CartSidebar() {
                       </div>
                       <div className="flex-1">
                         <h4 className="font-medium">{item.name}</h4>
-                        <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">₹{item.price.toFixed(2)}</p>
                         <div className="flex items-center gap-2 mt-2">
                           <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                             <Minus className="h-3 w-3" />
@@ -88,7 +88,7 @@ export function CartSidebar() {
                         </div>
                       </div>
                       <div className="flex flex-col items-end justify-between h-full">
-                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="font-semibold">₹{(item.price * item.quantity).toFixed(2)}</p>
                         <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground" onClick={() => removeItem(item.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -103,18 +103,18 @@ export function CartSidebar() {
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 {appliedDiscount && (
                   <div className="flex justify-between text-primary">
                     <span>Discount ({appliedDiscount.percentage}%)</span>
-                    <span>- ${(subtotal - total).toFixed(2)}</span>
+                    <span>- ₹{(subtotal - total).toFixed(2)}</span>
                   </div>
                 )}
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </div>
 
