@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { PlusCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 import type { MenuItem } from '@/lib/types';
 import { useCart } from '@/hooks/use-cart';
@@ -28,16 +28,16 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
   };
 
   return (
-    <Card className="flex flex-col overflow-hidden h-full">
+    <Card className="group flex flex-col overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardHeader className="p-0">
-        <div className="aspect-[3/2] relative w-full">
+        <div className="aspect-[3/2] relative w-full overflow-hidden">
             {placeholder && (
                  <Image
                     src={placeholder.imageUrl}
                     alt={item.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                     data-ai-hint={placeholder.imageHint}
                  />
             )}
@@ -45,13 +45,13 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
       </CardHeader>
       <CardContent className="p-4 flex-grow">
         <CardTitle className="text-lg font-headline">{item.name}</CardTitle>
-        <CardDescription className="mt-1 text-sm">{item.description}</CardDescription>
+        <CardDescription className="mt-1 text-sm line-clamp-2">{item.description}</CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex justify-between items-center">
-        <p className="text-lg font-semibold">₹{item.price.toFixed(2)}</p>
-        <Button onClick={handleAddToCart} size="sm" variant="outline">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add
+        <p className="text-lg font-bold text-primary">₹{item.price.toFixed(2)}</p>
+        <Button onClick={handleAddToCart} size="icon">
+          <Plus className="h-4 w-4" />
+          <span className="sr-only">Add to cart</span>
         </Button>
       </CardFooter>
     </Card>
