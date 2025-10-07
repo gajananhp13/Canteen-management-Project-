@@ -6,7 +6,7 @@ export interface MenuItem {
   category: Category;
   price: number;
   description: string;
-  imageId: string;
+  imageUrl: string;
 }
 
 export interface CartItem extends MenuItem {

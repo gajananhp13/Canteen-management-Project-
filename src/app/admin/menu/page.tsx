@@ -6,7 +6,7 @@ export default function AdminMenuPage() {
   const items = menuItems;
 
   return (
-    <div className="container mx-auto py-2">
+    <div>
       <MenuClient initialItems={items} />
     </div>
   );

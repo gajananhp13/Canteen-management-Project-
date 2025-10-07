@@ -18,7 +18,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import Image from 'next/image';
 
 interface MenuClientProps {
   initialItems: MenuItem[];
@@ -73,6 +74,7 @@ export function MenuClient({ initialItems }: MenuClientProps) {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-[80px]">Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
@@ -82,6 +84,9 @@ export function MenuClient({ initialItems }: MenuClientProps) {
             <TableBody>
               {items.map((item) => (
                 <TableRow key={item.id}>
+                  <TableCell>
+                    <Image src={item.imageUrl} alt={item.name} width={64} height={64} className="rounded-md object-cover w-16 h-16" />
+                  </TableCell>
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell><Badge variant="secondary">{item.category}</Badge></TableCell>
                   <TableCell>₹{item.price.toFixed(2)}</TableCell>

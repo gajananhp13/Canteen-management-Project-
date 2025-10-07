@@ -5,7 +5,6 @@ import { Plus } from 'lucide-react';
 
 import type { MenuItem } from '@/lib/types';
 import { useCart } from '@/hooks/use-cart';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +16,6 @@ interface MenuItemCardProps {
 export function MenuItemCard({ item }: MenuItemCardProps) {
   const { addItem } = useCart();
   const { toast } = useToast();
-  const placeholder = PlaceHolderImages.find(p => p.id === item.imageId);
 
   const handleAddToCart = () => {
     addItem(item);
@@ -31,16 +29,13 @@ export function MenuItemCard({ item }: MenuItemCardProps) {
     <Card className="group flex flex-col overflow-hidden h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <CardHeader className="p-0">
         <div className="aspect-[3/2] relative w-full overflow-hidden">
-            {placeholder && (
-                 <Image
-                    src={placeholder.imageUrl}
-                    alt={item.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    data-ai-hint={placeholder.imageHint}
-                 />
-            )}
+             <Image
+                src={item.imageUrl}
+                alt={item.name}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+             />
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">

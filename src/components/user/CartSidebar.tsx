@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { SheetContent, SheetHeader, SheetTitle, SheetFooter, SheetClose } from '@/components/ui/sheet';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useToast } from '@/hooks/use-toast';
 import { PaymentDialog } from './PaymentDialog';
 
@@ -66,13 +65,10 @@ export function CartSidebar() {
             <ScrollArea className="flex-1 px-6">
               <div className="flex flex-col gap-4 py-4">
                 {items.map((item) => {
-                  const placeholder = PlaceHolderImages.find((p) => p.id === item.imageId);
                   return (
                     <div key={item.id} className="flex items-start gap-4">
                       <div className="relative h-20 w-20 rounded-md overflow-hidden">
-                        {placeholder && (
-                          <Image src={placeholder.imageUrl} alt={item.name} fill className="object-cover" data-ai-hint={placeholder.imageHint} />
-                        )}
+                          <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
                       </div>
                       <div className="flex-1">
                         <h4 className="font-medium">{item.name}</h4>
@@ -98,7 +94,7 @@ export function CartSidebar() {
                 })}
               </div>
             </ScrollArea>
-            <div className="px-6 py-4 border-t space-y-4">
+             <div className="px-6 py-4 border-t space-y-4">
                  <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Subtotal</span>
@@ -106,7 +102,7 @@ export function CartSidebar() {
                     </div>
                     {appliedDiscount && (
                     <div className="flex justify-between text-sm text-green-600">
-                        <span>Discount ({appliedDiscount.percentage}%)</span>
+                        <span>Discount ({appliedDiscount.code} - {appliedDiscount.percentage}%)</span>
                         <span>- ₹{(subtotal - total).toFixed(2)}</span>
                     </div>
                     )}
