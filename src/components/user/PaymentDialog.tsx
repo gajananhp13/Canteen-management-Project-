@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Image from 'next/image';
+import QRCode from 'react-qr-code';
 import {
   Dialog,
   DialogContent,
@@ -27,11 +27,13 @@ export function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: PaymentDial
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // This is a sample UPI string. In a real app, your backend would get this from Razorpay.
+  const upiQrString = `upi://pay?pa=yourservicename@okhdfcbank&pn=ServeSmart&am=${total.toFixed(2)}&cu=INR&tn=Order at ServeSmart`;
+
   const handleSimulatePayment = async () => {
     setIsLoading(true);
     try {
-      // In a real app, you'd integrate with a payment gateway here.
-      // We simulate a delay and then call our server action.
+      // We simulate a delay for payment processing.
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const { orderId } = await placeOrder(items, total, appliedDiscount);
@@ -64,15 +66,13 @@ export function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: PaymentDial
           </DialogDescription>
         </DialogHeader>
         <div className="py-8 flex flex-col items-center gap-4">
-            <div className="relative w-64 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                <Image 
-                    src="https://picsum.photos/seed/qrcode/256/256" 
-                    alt="UPI QR Code" 
-                    width={256} 
-                    height={256}
-                    data-ai-hint="qr code"
-                    className="rounded-md"
-                />
+            <div className="p-4 bg-white rounded-lg" style={{ height: "auto", margin: "0 auto", maxWidth: 256, width: "100%" }}>
+                <QRCode
+                    size={256}
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    value={upiQrString}
+                    viewBox={`0 0 256 256`}
+                    />
             </div>
             <div className="text-center">
                 <p className="text-muted-foreground">Total Amount</p>
