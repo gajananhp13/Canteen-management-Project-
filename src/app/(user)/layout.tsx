@@ -1,5 +1,6 @@
 import { CartProvider } from '@/context/CartProvider';
 import { Header } from '@/components/user/Header';
+import { Footer } from '@/components/user/Footer';
 
 export default function UserLayout({
   children,
@@ -11,9 +12,7 @@ export default function UserLayout({
       <div className="relative flex min-h-screen flex-col">
         <Header />
         <main className="flex-1">{children}</main>
-        <footer className="p-4 text-center text-sm text-muted-foreground border-t">
-          <p>&copy; {new Date().getFullYear()} ServeSmart. All rights reserved.</p>
-        </footer>
+        <Footer />
       </div>
     </CartProvider>
   );

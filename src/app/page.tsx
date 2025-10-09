@@ -13,6 +13,7 @@ import { Logo } from '@/components/shared/Logo';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { motion, useInView } from 'framer-motion';
 import { useMenuItems } from '@/hooks/useMenuItems';
+import { Footer } from '@/components/user/Footer';
 
 export default function Home() {
   const { items: menuItems, loading } = useMenuItems();
@@ -243,39 +244,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-muted border-t">
-        <div className="container py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="flex flex-col gap-4">
-            <Logo isLink={false} />
-            <p className="text-muted-foreground text-sm">The smart, modern solution for canteen management.</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li><Link href="/menu" className="text-sm text-muted-foreground hover:text-primary transition-colors">Menu</Link></li>
-              <li><Link href="/admin" className="text-sm text-muted-foreground hover:text-primary transition-colors">Admin Login</Link></li>
-              <li><Link href="#how-it-works" className="text-sm text-muted-foreground hover:text-primary transition-colors">How It Works</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-2">
-              <li><a href="mailto:support@servesmart.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">support@servesmart.com</a></li>
-              <li><span className="text-sm text-muted-foreground">+91 12345 67890</span></li>
-            </ul>
-          </div>
-        </div>
-        <div className="container py-4 text-center text-sm text-muted-foreground border-t">
-          <p>&copy; {new Date().getFullYear()} ServeSmart. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
