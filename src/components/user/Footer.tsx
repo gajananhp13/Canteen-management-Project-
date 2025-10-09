@@ -12,22 +12,22 @@ export function Footer() {
         <div>
           <h4 className="font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2">
-            <li><Link href="/menu" className="text-sm text-muted-foreground hover:text-primary transition-colors">Menu</Link></li>
-            <li><Link href="/admin" className="text-sm text-muted-foreground hover:text-primary transition-colors">Admin Login</Link></li>
-            <li><Link href="/#how-it-works" className="text-sm text-muted-foreground hover:text-primary transition-colors">How It Works</Link></li>
+            <li><Link href="/menu" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Menu</Link></li>
+            <li><Link href="/admin" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Admin Login</Link></li>
+            <li><Link href="/#how-it-works" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">How It Works</Link></li>
           </ul>
         </div>
         <div>
           <h4 className="font-semibold mb-4">Legal</h4>
           <ul className="space-y-2">
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</a></li>
+            <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Privacy Policy</a></li>
+            <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">Terms of Service</a></li>
           </ul>
         </div>
         <div>
           <h4 className="font-semibold mb-4">Contact Us</h4>
           <ul className="space-y-2">
-            <li><a href="mailto:support@servesmart.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">support@servesmart.com</a></li>
+            <li><a href="mailto:support@servesmart.com" className="text-sm text-muted-foreground hover:text-primary transition-colors duration-300">support@servesmart.com</a></li>
             <li><span className="text-sm text-muted-foreground">+91 12345 67890</span></li>
           </ul>
         </div>
